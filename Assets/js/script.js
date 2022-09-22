@@ -59,6 +59,11 @@ answerBtn[2].addEventListener('click', checkAnswer);
 answerBtn[3].addEventListener('click', checkAnswer);
 mainScreen.addEventListener('click', reset);
 viewScore.addEventListener('click', displayScore);
+
+let tableRow = document.createElement('tr');
+let nameData = document.createElement('td');
+let scoreData = document.createElement('td');
+
 nameInput.style.display = 'none';
 questionContainer.style.display = 'none';
 mainScreen.style.display = 'none';
@@ -189,22 +194,27 @@ function displayScore() {
   highScore.style.display = 'flex';
 
   let players = JSON.parse(localStorage.getItem('player'));
+
   if (players === null) {
+    for (let i = 0; i < players.length; i++) {
+      renderScore.append(tableRow);
+      tableRow.append(nameData);
+      tableRow.append(scoreData);
+      nameData.textContent = players[i].name;
+      scoreData.textContent = players[i].score;
+    }
   } else {
     for (let i = 0; i < players.length; i++) {
-      let tableRow = document.createElement('tr');
-      let name = document.createElement('td');
-      let score = document.createElement('td');
-
       renderScore.append(tableRow);
-      tableRow.append(name);
-      tableRow.append(score);
-      name.textContent = players[i].name;
-      score.textContent = players[i].score;
+      tableRow.append(nameData);
+      tableRow.append(scoreData);
+      nameData.textContent = players[i].name;
+      scoreData.textContent = players[i].score;
     }
   }
   mainScreen.style.display = 'block';
   startBtn.style.display = 'none';
+  renderScore.style.display = 'block';
 }
 //will keep track of the score and also update to the localstorage as well as ask for name of player to keep score
 function askName() {
