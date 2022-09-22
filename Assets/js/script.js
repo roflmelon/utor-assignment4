@@ -44,25 +44,39 @@ let questionPool = [
 let questionDisplay = document.querySelector('#question');
 let questionContainer = document.querySelector('#question-container');
 let timerDisplay = document.querySelector('#timer');
-let highscore = document.querySelector('#view-score');
+let viewScore = document.querySelector('#view-score');
 let startBtn = document.querySelector('#startBtn');
 let title = document.querySelector('#title');
 let buttonContainer = document.querySelector('#button-container');
 let answerBtn = buttonContainer.querySelectorAll('button');
 let nameInput = document.querySelector('#name-input');
+let highScore = document.querySelector('#high-score');
+let renderScore = document.querySelector('#render-score');
+let mainScreen = document.querySelector('#main-screen');
 answerBtn[0].addEventListener('click', checkAnswer);
 answerBtn[1].addEventListener('click', checkAnswer);
 answerBtn[2].addEventListener('click', checkAnswer);
 answerBtn[3].addEventListener('click', checkAnswer);
+mainScreen.addEventListener('click', reset);
+viewScore.addEventListener('click', displayScore);
 nameInput.style.display = 'none';
 questionContainer.style.display = 'none';
-
+mainScreen.style.display = 'none';
 let gameState = true;
-let time = 10;
+let gameRecord = [];
+let time = 1000;
 let intervalID;
 let score = 0;
 let questionIndex = 0;
 
+function reset() {
+  nameInput.style.display = 'none';
+  questionContainer.style.display = 'none';
+  mainScreen.style.display = 'none';
+  title.textContent = 'Welcome to the Quiz Challenge!!';
+  startBtn.style.display = 'flex';
+  toggleBtn();
+}
 function checkAnswer(e) {
   //get the correct answer from questionpool object and compare to target.value
   if (questionPool.length > questionIndex) {
@@ -72,7 +86,7 @@ function checkAnswer(e) {
       displayQuestion(questionPool[questionIndex].question);
       questionIndex++;
     } else {
-      time -= 5;
+      time -= 500;
       populateAnswerBtn(questionIndex);
       displayQuestion(questionPool[questionIndex].question);
       questionIndex++;
@@ -94,6 +108,7 @@ function displayQuestion(question) {
 
 //takes in the question object and filters the answer props to an array to be mapped to the answer buttons with eventlisteners
 function populateAnswerBtn(index) {
+  console.log(index);
   let answers = [];
   let questionObj = questionPool[index];
   //this forloop below is not necessary if answers are in an array
@@ -114,19 +129,20 @@ function populateAnswerBtn(index) {
 //if game started, toggle off the start button and score button then toggle on the answer buttons and vice versa
 function toggleBtn() {
   if (gameState === true) {
-    highscore.style.visibility = 'hidden';
+    viewScore.style.visibility = 'hidden';
     startBtn.style.visibility = 'hidden';
     questionContainer.style.display = 'flex';
     title.style.display = 'none';
-    highscore.style.display = 'none';
+    viewScore.style.display = 'none';
     timerDisplay.style.display = 'block';
+    highScore.style.display = 'none';
     gameState = false;
   } else {
-    highscore.style.visibility = 'visible';
+    viewScore.style.visibility = 'visible';
     startBtn.style.visibility = 'visible';
     questionContainer.style.display = 'none';
     title.style.display = 'block';
-    highscore.style.display = 'block';
+    viewScore.style.display = 'block';
     timerDisplay.style.display = 'none';
     gameState = true;
   }
@@ -152,7 +168,43 @@ function randomizeQuestion() {
 }
 function saveScore(event) {
   event.preventDefault();
-  let name = event.target[0].value;
+  let name = event.target[0].value.trim();
+  let player = { name: name, score: score };
+
+  if (localStorage.length === 0) {
+    gameRecord.push(player);
+    localStorage.setItem('player', JSON.stringify(gameRecord));
+  } else {
+    let tempPlayer = JSON.parse(localStorage.getItem('player'));
+    tempPlayer.push(player);
+    localStorage.setItem('player', JSON.stringify(tempPlayer));
+  }
+  displayScore();
+}
+
+function displayScore() {
+  title.textContent = 'High Scores:';
+  questionDisplay.textContent = '';
+  nameInput.style.display = 'none';
+  highScore.style.display = 'flex';
+
+  let players = JSON.parse(localStorage.getItem('player'));
+  if (players === null) {
+  } else {
+    for (let i = 0; i < players.length; i++) {
+      let tableRow = document.createElement('tr');
+      let name = document.createElement('td');
+      let score = document.createElement('td');
+
+      renderScore.append(tableRow);
+      tableRow.append(name);
+      tableRow.append(score);
+      name.textContent = players[i].name;
+      score.textContent = players[i].score;
+    }
+  }
+  mainScreen.style.display = 'block';
+  startBtn.style.display = 'none';
 }
 //will keep track of the score and also update to the localstorage as well as ask for name of player to keep score
 function askName() {
@@ -170,7 +222,7 @@ function askName() {
 function timer() {
   intervalID = setInterval(() => {
     if (time > 0) {
-      timerDisplay.textContent = 'Time left: ' + time;
+      timerDisplay.textContent = 'Time left: ' + Math.ceil(time / 100);
       time--;
     } else {
       clearInterval(intervalID);
@@ -178,7 +230,7 @@ function timer() {
       timerDisplay.textContent = '';
       askName();
     }
-  }, 1000);
+  }, 10);
 }
 function gameStart() {
   randomizeQuestion();
