@@ -194,9 +194,11 @@ function renderHighscorePage() {
   //check if list is empty/null
   if (playerList === null) {
     highscoreTitle.textContent = 'No Highscores YET....';
+    console.log('render none');
   } else {
     // if no players are there OR first time rendering highscore page, simply shows all scores stored in the localStorage
     if (highscoreList.childElementCount < 1) {
+      console.log('render 1');
       for (let i = 0; i < playerList.length; i++) {
         let tr = document.createElement('tr');
         let tdName = document.createElement('td');
@@ -209,7 +211,9 @@ function renderHighscorePage() {
         tdName.textContent = playerList[i].name;
         tdScore.textContent = playerList[i].score;
       }
+      //this will just push a new score to the existing one
     } else if (playerList.length > highscoreList.childElementCount) {
+      console.log('render 2');
       let tr = document.createElement('tr');
       let tdName = document.createElement('td');
       let tdScore = document.createElement('td');
