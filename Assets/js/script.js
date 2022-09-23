@@ -209,38 +209,6 @@ function renderHighscorePage() {
         tdName.textContent = playerList[i].name;
         tdScore.textContent = playerList[i].score;
       }
-
-      console.log(highscoreList.children);
-    } else if (
-      highscoreList.childElementCount > 1 &&
-      highscoreList.childElementCount === playerList
-    ) {
-      // console.log('Score list nodes: ' + highscoreList.childElementCount);
-      // console.log(highscoreList[1]);
-      // console.log('player list length: ' + playerList.length);
-      // console.log(highscoreList.children[1].children[1]);
-
-      for (let i = 0; i < playerList.length; i++) {
-        let tr = document.createElement('tr');
-        let tdName = document.createElement('td');
-        let tdScore = document.createElement('td');
-
-        // highscoreList.removeChild(highscoreListTr[0].children[i + 1]);
-        highscoreList.replaceChildren(tr, highscoreList.children[i]);
-        highscoreList.replaceChildren(
-          tdName,
-          highscoreList.children[i].children[0]
-        );
-        highscoreList.replaceChildren(
-          tdScore,
-          highscoreList.children[i].children[1]
-        );
-
-        tdName.textContent = playerList[i].name;
-        tdScore.textContent = playerList[i].score;
-      }
-
-      console.log(highscoreList.children[1]);
     } else if (playerList.length > highscoreList.childElementCount) {
       let tr = document.createElement('tr');
       let tdName = document.createElement('td');
