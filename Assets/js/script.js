@@ -196,7 +196,7 @@ function renderHighscorePage() {
     highscoreTitle.textContent = 'No Highscores YET....';
   } else {
     // if no players are there OR first time rendering highscore page, simply shows all scores stored in the localStorage
-    if (highscoreList.childElementCount <= 1) {
+    if (highscoreList.childElementCount < 1) {
       for (let i = 0; i < playerList.length; i++) {
         let tr = document.createElement('tr');
         let tdName = document.createElement('td');
@@ -209,12 +209,16 @@ function renderHighscorePage() {
         tdName.textContent = playerList[i].name;
         tdScore.textContent = playerList[i].score;
       }
-    } else if (highscoreList.childElementCount >= 2) {
+
+      console.log(highscoreList.children);
+    } else if (
+      highscoreList.childElementCount > 1 &&
+      highscoreList.childElementCount === playerList
+    ) {
       // console.log('Score list nodes: ' + highscoreList.childElementCount);
       // console.log(highscoreList[1]);
       // console.log('player list length: ' + playerList.length);
       // console.log(highscoreList.children[1].children[1]);
-      console.log(highscoreListTr[0]);
 
       for (let i = 0; i < playerList.length; i++) {
         let tr = document.createElement('tr');
@@ -222,32 +226,33 @@ function renderHighscorePage() {
         let tdScore = document.createElement('td');
 
         // highscoreList.removeChild(highscoreListTr[0].children[i + 1]);
-        highscoreList.replaceChildren(tr, highscoreList.children[i + 1]);
+        highscoreList.replaceChildren(tr, highscoreList.children[i]);
         highscoreList.replaceChildren(
           tdName,
-          highscoreList.children[i + 1].children[0]
+          highscoreList.children[i].children[0]
         );
         highscoreList.replaceChildren(
           tdScore,
-          highscoreList.children[i + 1].children[1]
+          highscoreList.children[i].children[1]
         );
 
         tdName.textContent = playerList[i].name;
         tdScore.textContent = playerList[i].score;
       }
+
+      console.log(highscoreList.children[1]);
+    } else if (playerList.length > highscoreList.childElementCount) {
+      let tr = document.createElement('tr');
+      let tdName = document.createElement('td');
+      let tdScore = document.createElement('td');
+
+      tr.appendChild(tdName);
+      tr.appendChild(tdScore);
+      highscoreList.appendChild(tr);
+
+      tdName.textContent = playerList[playerList.length - 1].name;
+      tdScore.textContent = playerList[playerList.length - 1].score;
     }
-    // else if (playerList.length > highscoreList.childElementCount) {
-    //   let tr = document.createElement('tr');
-    //   let tdName = document.createElement('td');
-    //   let tdScore = document.createElement('td');
-
-    //   tr.appendChild(tdName);
-    //   tr.appendChild(tdScore);
-    //   highscoreList.appendChild(tr);
-
-    //   tdName.textContent = playerList[playerList.length - 1].name;
-    //   tdScore.textContent = playerList[playerList.length - 1].score;
-    // }
   }
 }
 
