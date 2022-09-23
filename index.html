@@ -9,42 +9,51 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css"
     />
     <link rel="stylesheet" href="./Assets/css/style.css" />
-    <title>Document</title>
+    <title>Code Quiz</title>
   </head>
   <body>
     <div class="container">
-      <header class="timerScore">
-        <button id="view-score">View high score</button>
-        <div id="timer"></div>
-      </header>
-      <div class="display">
-        <h1 id="title">Welcome to the Quiz Challenge!!</h1>
-        <div id="question-container">
-          <h2 id="question"></h2>
-          <form id="name-input">
-            <input type="text" name="name" />
-            <input type="submit" value="submit" />
+      <div class="body-container">
+        <div id="home-view">
+          <button class="button" id="view-score">View high score</button>
+          <h1 id="home-title">Welcome to the Quiz</h1>
+          <button class="button" id="start-button">Start</button>
+        </div>
+
+        <div id="game-view">
+          <div id="display-time">Time left:</div>
+          <h2 id="game-title">question goes here</h2>
+          <div id="button-container">
+            <button class="button" id="answer1">Start 1</button>
+            <button class="button" id="answer2">Start 2</button>
+            <button class="button" id="answer3">Start 3</button>
+            <button class="button" id="answer4">Start 4</button>
+            <div id="bottom-msg"></div>
+          </div>
+        </div>
+
+        <div id="submit-view">
+          <h1 id="submit-title">Enter your name:</h1>
+          <form action="" id="name-form">
+            <input type="text" />
+            <input type="submit" class="button" value="Submit" />
           </form>
-          <table id="high-score">
-            <tbody id="render-score">
+        </div>
+
+        <div id="score-view">
+          <h1 id="highscore-title">Highscores</h1>
+          <table>
+            <tbody id="highscore-list">
               <tr>
                 <td>Name:</td>
                 <td>Score:</td>
               </tr>
             </tbody>
           </table>
-          <button id="main-screen">Main Screen</button>
-          <div id="button-container">
-            <button value=""></button>
-            <button value=""></button>
-            <button value=""></button>
-            <button value=""></button>
-          </div>
+          <button class="button" id="main-menu">Main Page</button>
         </div>
-        <button id="startBtn">Start!</button>
       </div>
     </div>
-
     <script src="./Assets/js/script.js"></script>
   </body>
 </html>

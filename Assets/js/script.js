@@ -1,267 +1,214 @@
+//-------------------------variables
 let questionPool = [
   {
-    // the answers can be set to an array for easy access. but this example i'm using just object key/value.
-    question: 'questions 1',
-    answer1: 'answer1',
-    answer2: 'answer2',
-    answer3: 'answer3',
-    answer4: 'correct',
-    correct: 'answer4',
+    question: 'question 1',
+    answers: ['answer1', 'correct', 'answer1', 'answer1'],
+    correct: 'correct',
   },
   {
-    question: 'questions 2',
-    answer1: 'answer1',
-    answer2: 'correct',
-    answer3: 'answer3',
-    answer4: 'answer4',
-    correct: 'answer2',
+    question: 'question 2',
+    answers: ['answer2', 'answer2', 'correct', 'answer2'],
+    correct: 'correct',
   },
   {
-    question: 'questions 3',
-    answer1: 'correct',
-    answer2: 'answer2',
-    answer3: 'answer3',
-    answer4: 'answer4',
-    correct: 'answer1',
+    question: 'question 3',
+    answers: ['answer3', 'answer3', 'correct', 'answer3'],
+    correct: 'correct',
   },
   {
-    question: 'questions 4',
-    answer1: 'answer1',
-    answer2: 'correct',
-    answer3: 'answer3',
-    answer4: 'answer4',
-    correct: 'answer2',
+    question: 'question 4',
+    answers: ['correct', 'answer4', 'answer4', 'answer4'],
+    correct: 'correct',
   },
   {
-    question: 'questions 5',
-    answer1: 'answer1',
-    answer2: 'answer2',
-    answer3: 'correct',
-    answer4: 'answer4',
-    correct: 'answer3',
+    question: 'question 5',
+    answers: ['answer5', 'answer5', 'answer5', 'correct'],
+    correct: 'correct',
   },
 ];
-let questionDisplay = document.querySelector('#question');
-let questionContainer = document.querySelector('#question-container');
-let timerDisplay = document.querySelector('#timer');
-let viewScore = document.querySelector('#view-score');
-let startBtn = document.querySelector('#startBtn');
-let title = document.querySelector('#title');
-let buttonContainer = document.querySelector('#button-container');
-let answerBtn = buttonContainer.querySelectorAll('button');
-let nameInput = document.querySelector('#name-input');
-let highScore = document.querySelector('#high-score');
-let renderScore = document.querySelector('#render-score');
-let mainScreen = document.querySelector('#main-screen');
-answerBtn[0].addEventListener('click', checkAnswer);
-answerBtn[1].addEventListener('click', checkAnswer);
-answerBtn[2].addEventListener('click', checkAnswer);
-answerBtn[3].addEventListener('click', checkAnswer);
-mainScreen.addEventListener('click', reset);
-viewScore.addEventListener('click', displayScore);
-
-let tableRow = document.createElement('tr');
-let nameData = document.createElement('td');
-let scoreData = document.createElement('td');
-
-nameInput.style.display = 'none';
-questionContainer.style.display = 'none';
-mainScreen.style.display = 'none';
-let gameState = true;
-let gameRecord = [];
 let time = 1000;
-let intervalID;
-let score = 0;
 let questionIndex = 0;
+let score = 0;
+//-------------------------main page
+let homeView = document.querySelector('#home-view');
+let viewHighScoreBtn = document.querySelector('#view-score');
+let homeTitle = document.querySelector('#home-title');
+let startBtn = document.querySelector('#start-button');
+//-------------------------game page
+let gameView = document.querySelector('#game-view');
+let displayTime = document.querySelector('#display-time');
+let gameTitle = document.querySelector('#game-title');
+let buttonContainer = document.querySelector('#button-container');
+let allAnswerBtn = document.querySelectorAll('#button-container button');
+let answer1Btn = document.querySelector('#answer1');
+let answer2Btn = document.querySelector('#answer2');
+let answer3Btn = document.querySelector('#answer3');
+let answer4Btn = document.querySelector('#answer4');
+let bottomMsg = document.querySelector('#bottom-msg');
+//-------------------------submit page
+let submitView = document.querySelector('#submit-view');
+let submitTitle = document.querySelector('#submit-title');
+let nameForm = document.querySelector('#name-form');
+//------------------------highscore page
+let scoreView = document.querySelector('#score-view');
+let highscoreTitle = document.querySelector('#highscore-title');
+let highscoreList = document.querySelector('#highscore-list');
+let mainMenuBtn = document.querySelector('#main-menu');
 
-function reset() {
-  nameInput.style.display = 'none';
-  questionContainer.style.display = 'none';
-  mainScreen.style.display = 'none';
-  title.textContent = 'Welcome to the Quiz Challenge!!';
-  startBtn.style.display = 'flex';
-  toggleBtn();
+//----------------------------functions
+function startGame() {
+  clearAllElements();
+  randomizeQuestions();
+  renderGamePage();
 }
-function checkAnswer(e) {
-  //get the correct answer from questionpool object and compare to target.value
+function clearAllElements() {
+  //home
+  homeView.style.display = 'none';
+  viewHighScoreBtn.style.display = 'none';
+  homeTitle.style.display = 'none';
+  startBtn.style.display = 'none';
+  //game
+  gameView.style.display = 'none';
+  displayTime.style.display = 'none';
+  gameTitle.style.display = 'none';
+  buttonContainer.style.display = 'none';
+  answer1Btn.style.display = 'none';
+  answer2Btn.style.display = 'none';
+  answer3Btn.style.display = 'none';
+  answer4Btn.style.display = 'none';
+  bottomMsg.style.display = 'none';
+  //submit
+  submitView.style.display = 'none';
+  submitTitle.style.display = 'none';
+  nameForm.style.display = 'none';
+  //highscore
+  scoreView.style.display = 'none';
+  highscoreTitle.style.display = 'none';
+  highscoreList.style.display = 'none';
+  mainMenuBtn.style.display = 'none';
+}
+function randomizeQuestions() {
+  //randomizes the question pool in the global scope
+  let index;
+  for (let i = 0; i < questionPool.length; i++) {
+    let tempValue;
+    let randomIndex = Math.floor(Math.random() * questionPool.length);
+    tempValue = questionPool[i];
+    questionPool[i] = questionPool[randomIndex];
+    questionPool[randomIndex] = tempValue;
+  }
+}
+function renderGamePage() {
+  clearAllElements();
+  gameView.style.display = 'flex';
+  displayTime.style.display = 'flex';
+  gameTitle.style.display = 'flex';
+  buttonContainer.style.display = 'flex';
+  answer1Btn.style.display = 'flex';
+  answer2Btn.style.display = 'flex';
+  answer3Btn.style.display = 'flex';
+  answer4Btn.style.display = 'flex';
+  bottomMsg.style.display = 'flex';
+
+  //picks the questions from the pool and if no more questions left, saveScore();
+  //game title is also generated
   if (questionPool.length > questionIndex) {
-    if (e.target.value === 'correct') {
-      score++;
-      populateAnswerBtn(questionIndex);
-      displayQuestion(questionPool[questionIndex].question);
-      questionIndex++;
-    } else {
-      time -= 500;
-      populateAnswerBtn(questionIndex);
-      displayQuestion(questionPool[questionIndex].question);
-      questionIndex++;
-    }
+    populateButtons(questionPool[questionIndex]);
+    gameTitle.textContent = questionPool[questionIndex].question;
   } else {
-    if (e.target.value === 'correct') {
-      score++;
-    }
-    askName();
-    console.log('gameover');
-    console.log('game score ' + score);
+    renderSubmitPage();
   }
 }
-
-//simply displays the question
-function displayQuestion(question) {
-  questionDisplay.textContent = question;
-}
-
-//takes in the question object and filters the answer props to an array to be mapped to the answer buttons with eventlisteners
-function populateAnswerBtn(index) {
-  console.log(index);
-  let answers = [];
-  let questionObj = questionPool[index];
-  //this forloop below is not necessary if answers are in an array
-  for (const [key, value] of Object.entries(questionObj)) {
-    if (key === 'question' || key === 'correct') {
-    } else {
-      answers.push(value);
-    }
-  }
-  for (let i = 0; i < answers.length; i++) {
-    answerBtn[i].textContent = answers[i];
-    answerBtn[i].value = answers[i];
-  }
-  // answerBtn.forEach((button) => {
-  //   button.addEventListener('click', checkAnswer);
-  // });
-}
-//if game started, toggle off the start button and score button then toggle on the answer buttons and vice versa
-function toggleBtn() {
-  if (gameState === true) {
-    viewScore.style.visibility = 'hidden';
-    startBtn.style.visibility = 'hidden';
-    questionContainer.style.display = 'flex';
-    title.style.display = 'none';
-    viewScore.style.display = 'none';
-    timerDisplay.style.display = 'block';
-    highScore.style.display = 'none';
-    gameState = false;
+function checkAnswers(event) {
+  if (event.target.textContent === questionPool[questionIndex].correct) {
+    bottomMsg.textContent = 'CORRECT!!!';
+    score++;
+    questionIndex++;
+    renderGamePage();
   } else {
-    viewScore.style.visibility = 'visible';
-    startBtn.style.visibility = 'visible';
-    questionContainer.style.display = 'none';
-    title.style.display = 'block';
-    viewScore.style.display = 'block';
-    timerDisplay.style.display = 'none';
-    gameState = true;
+    bottomMsg.textContent = 'WRONG!!!';
+    time -= 500;
+    questionIndex++;
+    renderGamePage();
   }
 }
-function randomizeQuestion() {
-  //commented code below is for selecting randomly from index of an object and insert it into new one
-  // let question = questionPool[Math.floor(Math.random() * questionPool.length)];
-  // questionPool.splice(questionPool.indexOf(question), 1);
-  // return question;
+function renderSubmitPage(event) {
+  clearAllElements();
 
-  //it just randomize the object array
-  let currentIndex = questionPool.length;
-  // There remain elements to shuffle
-  while (0 !== currentIndex) {
-    // Pick a remaining element
-    let randomIndex = Math.floor(Math.random() * currentIndex);
-    currentIndex -= 1;
-    // Swap it with the current element.
-    let temp = questionPool[currentIndex];
-    questionPool[currentIndex] = questionPool[randomIndex];
-    questionPool[randomIndex] = temp;
-  }
+  submitView.style.display = 'flex';
+  submitTitle.style.display = 'flex';
+  nameForm.style.display = 'flex';
 }
-function saveScore(event) {
-  event.preventDefault();
-  let name = event.target[0].value.trim();
-  let player = { name: name, score: score };
+function saveScore(e) {
+  e.preventDefault();
+  let player = { name: e.target[0].value.trim(), score: score };
+  let playerList = [];
 
   if (localStorage.length === 0) {
-    gameRecord.push(player);
-    localStorage.setItem('player', JSON.stringify(gameRecord));
+    playerList.push(player);
+    localStorage.setItem('players', JSON.stringify(playerList));
   } else {
-    let tempPlayer = JSON.parse(localStorage.getItem('player'));
-    tempPlayer.push(player);
-    localStorage.setItem('player', JSON.stringify(tempPlayer));
+    let tempList = JSON.parse(localStorage.getItem('players'));
+    tempList.push(player);
+    localStorage.setItem('players', JSON.stringify(tempList));
   }
-  displayScore();
+  renderHighscorePage();
+  //the index resets here to reset the game, well you can reset anywhere as long as it's before the start game button is rerendered
+  //ofc score has to be saved before resetting
+  questionIndex = 0;
+  score = 0;
 }
+function renderMainPage() {
+  clearAllElements();
+  homeView.style.display = 'flex';
+  viewHighScoreBtn.style.display = 'flex';
+  homeTitle.style.display = 'flex';
+  startBtn.style.display = 'flex';
+}
+function renderHighscorePage() {
+  let playerList = JSON.parse(localStorage.getItem('players'));
+  clearAllElements();
+  scoreView.style.display = 'flex';
+  highscoreTitle.style.display = 'flex';
+  highscoreList.style.display = 'flex';
+  mainMenuBtn.style.display = 'flex';
 
-function displayScore() {
-  title.textContent = 'High Scores:';
-  questionDisplay.textContent = '';
-  nameInput.style.display = 'none';
-  highScore.style.display = 'flex';
-
-  let players = JSON.parse(localStorage.getItem('player'));
-
-  if (players === null) {
-    for (let i = 0; i < players.length; i++) {
-      renderScore.append(tableRow);
-      tableRow.append(nameData);
-      tableRow.append(scoreData);
-      nameData.textContent = players[i].name;
-      scoreData.textContent = players[i].score;
-    }
+  if (playerList === null) {
+    highscoreTitle.textContent = 'No Highscores YET....';
   } else {
-    for (let i = 0; i < players.length; i++) {
-      renderScore.append(tableRow);
-      tableRow.append(nameData);
-      tableRow.append(scoreData);
-      nameData.textContent = players[i].name;
-      scoreData.textContent = players[i].score;
-    }
-  }
-  mainScreen.style.display = 'block';
-  startBtn.style.display = 'none';
-  renderScore.style.display = 'block';
-}
-//will keep track of the score and also update to the localstorage as well as ask for name of player to keep score
-function askName() {
-  //title prompt
-  title.style.display = 'flex';
-  title.textContent = 'Game Over';
-  //hide buttons
-  buttonContainer.style.display = 'none';
-  //message prompt for name
-  questionDisplay.textContent = 'Please enter your name:';
-  //input box for name
-  nameInput.style.display = 'flex';
-  nameInput.addEventListener('submit', saveScore);
-}
-function timer() {
-  intervalID = setInterval(() => {
-    if (time > 0) {
-      timerDisplay.textContent = 'Time left: ' + Math.ceil(time / 100);
-      time--;
-    } else {
-      clearInterval(intervalID);
-      time = 10;
-      timerDisplay.textContent = '';
-      askName();
-    }
-  }, 10);
-}
-function gameStart() {
-  randomizeQuestion();
-  if (time !== 0) {
-    if (questionPool[questionIndex] !== null) {
-      toggleBtn();
-      timer();
-      populateAnswerBtn(questionIndex);
-      displayQuestion(questionPool[questionIndex].question);
-      questionIndex++;
+    for (let i = 0; i < playerList.length; i++) {
+      let tr = document.createElement('tr');
+      let tdName = document.createElement('td');
+      let tdScore = document.createElement('td');
+
+      tr.appendChild(tdName);
+      tr.appendChild(tdScore);
+      highscoreList.appendChild(tr);
+
+      tdName.textContent = playerList[i].name;
+      tdScore.textContent = playerList[i].score;
     }
   }
 }
 
-// starts game timer and display a questions from a pool of questions
-// check for answer input
-// if answer is right next question
-// if answer is wrong then subtract time from clock then next questions
-// when time = 0 game ends with a score from total from pool of questions - correct answer = score
-// then save score in localstorage
-// call start main screen once finished
-
-// click start button
-startBtn.addEventListener('click', gameStart);
+function populateButtons(question) {
+  // i could shuffle the answer placement too but meh
+  // need a global index for the question pool to keep track of which questions are left so they can be populated.
+  for (let i = 0; i < question.answers.length; i++) {
+    allAnswerBtn[i].textContent = question.answers[i];
+    gameTitle.textContent = question.question[i];
+  }
+}
+//-------------------------eventlisteners
+viewHighScoreBtn.addEventListener('click', renderHighscorePage);
+mainMenuBtn.addEventListener('click', renderMainPage);
+answer1Btn.addEventListener('click', checkAnswers);
+answer2Btn.addEventListener('click', checkAnswers);
+answer3Btn.addEventListener('click', checkAnswers);
+answer4Btn.addEventListener('click', checkAnswers);
+nameForm.addEventListener('submit', saveScore);
+startBtn.addEventListener('click', startGame);
+addEventListener('load', () => {
+  clearAllElements();
+  renderMainPage();
+});
