@@ -29,6 +29,7 @@ let questionPool = [
 let time = 1000;
 let questionIndex = 0;
 let score = 0;
+let intervalID;
 //-------------------------main page
 let homeView = document.querySelector('#home-view');
 let viewHighScoreBtn = document.querySelector('#view-score');
@@ -59,6 +60,7 @@ let mainMenuBtn = document.querySelector('#main-menu');
 function startGame() {
   clearAllElements();
   randomizeQuestions();
+  startTimer();
   renderGamePage();
 }
 function clearAllElements() {
@@ -97,6 +99,19 @@ function randomizeQuestions() {
     questionPool[i] = questionPool[randomIndex];
     questionPool[randomIndex] = tempValue;
   }
+}
+function startTimer() {
+  intervalID = setInterval(() => {
+    if (time > 0) {
+      displayTime.textContent = 'Time left: ' + Math.ceil(time / 100);
+      time--;
+    } else {
+      clearInterval(intervalID);
+      time = 1000;
+      displayTime.textContent = '';
+      renderSubmitPage();
+    }
+  }, 10);
 }
 function renderGamePage() {
   clearAllElements();
@@ -138,6 +153,8 @@ function renderSubmitPage(event) {
   submitView.style.display = 'flex';
   submitTitle.style.display = 'flex';
   nameForm.style.display = 'flex';
+  time = 1000;
+  console.log(time);
 }
 function saveScore(e) {
   e.preventDefault();
