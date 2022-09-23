@@ -54,6 +54,7 @@ let nameForm = document.querySelector('#name-form');
 let scoreView = document.querySelector('#score-view');
 let highscoreTitle = document.querySelector('#highscore-title');
 let highscoreList = document.querySelector('#highscore-list');
+let highscoreListTr = document.querySelectorAll('#highscore-list');
 let mainMenuBtn = document.querySelector('#main-menu');
 
 //----------------------------functions
@@ -106,7 +107,6 @@ function startTimer() {
       displayTime.textContent = 'Time left: ' + Math.ceil(time / 100);
       time--;
     } else {
-      clearInterval(intervalID);
       time = 3000;
       displayTime.textContent = '';
       renderSubmitPage();
@@ -149,12 +149,12 @@ function checkAnswers(event) {
 }
 function renderSubmitPage(event) {
   clearAllElements();
+  clearInterval(intervalID);
 
   submitView.style.display = 'flex';
   submitTitle.style.display = 'flex';
   nameForm.style.display = 'flex';
   time = 3000;
-  console.log(time);
 }
 function saveScore(e) {
   e.preventDefault();
@@ -183,6 +183,7 @@ function renderMainPage() {
   startBtn.style.display = 'flex';
 }
 function renderHighscorePage() {
+  //gets all players from highscore list
   let playerList = JSON.parse(localStorage.getItem('players'));
   clearAllElements();
   scoreView.style.display = 'flex';
@@ -190,21 +191,63 @@ function renderHighscorePage() {
   highscoreList.style.display = 'flex';
   mainMenuBtn.style.display = 'flex';
 
+  //check if list is empty/null
   if (playerList === null) {
     highscoreTitle.textContent = 'No Highscores YET....';
   } else {
-    for (let i = 0; i < playerList.length; i++) {
-      let tr = document.createElement('tr');
-      let tdName = document.createElement('td');
-      let tdScore = document.createElement('td');
+    // if no players are there OR first time rendering highscore page, simply shows all scores stored in the localStorage
+    if (highscoreList.childElementCount <= 1) {
+      for (let i = 0; i < playerList.length; i++) {
+        let tr = document.createElement('tr');
+        let tdName = document.createElement('td');
+        let tdScore = document.createElement('td');
 
-      tr.appendChild(tdName);
-      tr.appendChild(tdScore);
-      highscoreList.appendChild(tr);
+        tr.appendChild(tdName);
+        tr.appendChild(tdScore);
+        highscoreList.appendChild(tr);
 
-      tdName.textContent = playerList[i].name;
-      tdScore.textContent = playerList[i].score;
+        tdName.textContent = playerList[i].name;
+        tdScore.textContent = playerList[i].score;
+      }
+    } else if (highscoreList.childElementCount >= 2) {
+      // console.log('Score list nodes: ' + highscoreList.childElementCount);
+      // console.log(highscoreList[1]);
+      // console.log('player list length: ' + playerList.length);
+      // console.log(highscoreList.children[1].children[1]);
+      console.log(highscoreListTr[0]);
+
+      for (let i = 0; i < playerList.length; i++) {
+        let tr = document.createElement('tr');
+        let tdName = document.createElement('td');
+        let tdScore = document.createElement('td');
+
+        // highscoreList.removeChild(highscoreListTr[0].children[i + 1]);
+        highscoreList.replaceChildren(tr, highscoreList.children[i + 1]);
+        highscoreList.replaceChildren(
+          tdName,
+          highscoreList.children[i + 1].children[0]
+        );
+        highscoreList.replaceChildren(
+          tdScore,
+          highscoreList.children[i + 1].children[1]
+        );
+
+        tdName.textContent = playerList[i].name;
+        tdScore.textContent = playerList[i].score;
+      }
     }
+    // else if (playerList.length > highscoreList.childElementCount) {
+    //   let tr = document.createElement('tr');
+    //   let tdName = document.createElement('td');
+    //   let tdScore = document.createElement('td');
+
+    //   tr.appendChild(tdName);
+    //   tr.appendChild(tdScore);
+    //   highscoreList.appendChild(tr);
+
+    //   tdName.textContent = playerList[playerList.length - 1].name;
+    //   tdScore.textContent = playerList[playerList.length - 1].score;
+    // }
   }
 }
 
