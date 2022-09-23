@@ -26,7 +26,7 @@ let questionPool = [
     correct: 'correct',
   },
 ];
-let time = 1000;
+let time = 3000;
 let questionIndex = 0;
 let score = 0;
 let intervalID;
@@ -107,7 +107,7 @@ function startTimer() {
       time--;
     } else {
       clearInterval(intervalID);
-      time = 1000;
+      time = 3000;
       displayTime.textContent = '';
       renderSubmitPage();
     }
@@ -153,7 +153,7 @@ function renderSubmitPage(event) {
   submitView.style.display = 'flex';
   submitTitle.style.display = 'flex';
   nameForm.style.display = 'flex';
-  time = 1000;
+  time = 3000;
   console.log(time);
 }
 function saveScore(e) {
